@@ -1,0 +1,69 @@
+<!-- Delivery Boy Login Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delivery Boy Login – Suriyawan Saffari</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    🚚 Suriyawan Saffari – Delivery Login
+  </header>
+
+  <main class="login-container">
+    <h2>Login to Your Delivery Account</h2>
+    <form id="loginForm">
+      <input type="text" id="phone" placeholder="📱 Mobile Number" required />
+      <input type="password" id="password" placeholder="🔑 Password" required />
+      <button type="submit" class="btn">🔐 Login</button>
+      <p id="loginStatus" class="status"></p>
+    </form>
+  </main>
+
+  <footer>
+    © 2025 Suriyawan Saffari | Secure Delivery Login
+  </footer>
+
+  <script>
+    const BASE_URL = "https://suriyawan-saffari-backend.onrender.com";
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const loginStatus = document.getElementById("loginStatus");
+
+      // Clear previous message
+      loginStatus.innerText = "";
+
+      if (!phone || !password) {
+        loginStatus.innerText = "❗ Both fields are required.";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/delivery/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          localStorage.setItem("deliveryToken", data.token);
+          window.location.href = "dashboard.html";
+        } else {
+          loginStatus.innerText = data.message || "❌ Invalid credentials.";
+        }
+      } catch (err) {
+        loginStatus.innerText = "⚠️ Network or server error.";
+        console.error("Login error:", err);
+      }
+    });
+  </script>
+</body>
+</html>

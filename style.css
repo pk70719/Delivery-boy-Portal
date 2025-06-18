@@ -1,0 +1,154 @@
+/* Delivery Boy Portal – Suriyawan Saffari */
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #eafaf1;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  background-color: #00b894;
+  color: white;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.dashboard {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  width: 95%;
+  max-width: 750px;
+}
+
+.status {
+  color: green;
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.btn {
+  display: inline-block;
+  background-color: #00cec9;
+  color: white;
+  padding: 10px 20px;
+  margin: 10px 5px 0 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #00b894;
+}
+
+.card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+  box-shadow: 0 0 5px rgba(0,0,0,0.08);
+  border-left: 4px solid #00cec9;
+}
+
+.card h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #2d3436;
+}
+
+.card p {
+  margin: 4px 0;
+}
+
+input[type="file"] {
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 6px;
+  background: #f7f7f7;
+}
+
+footer {
+  margin: 40px 0 20px;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+#chatbox {
+  margin-top: 30px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  width: 95%;
+  max-width: 750px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#chatbox input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 0;
+}
+
+#chatbox button {
+  padding: 10px 15px;
+  background-color: #0984e3;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#chatResponse {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+  width: 100%;
+}
+
+.salary-info, .bonus-info {
+  font-size: 15px;
+  color: #444;
+  margin: 8px 0;
+  background-color: #f1f8e9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 4px solid #00b894;
+}
+
+@media screen and (max-width: 600px) {
+  .btn {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  #chatbox {
+    flex-direction: column;
+  }
+
+  #chatbox input, #chatbox button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}

@@ -1,0 +1,101 @@
+<!-- Delivery Boy Dashboard -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delivery Dashboard – Suriyawan Saffari</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    📦 Suriyawan Saffari – Delivery Dashboard
+  </header>
+
+  <main class="dashboard container">
+    <h2 id="welcome-msg">Checking Login...</h2>
+    <p class="status" id="status-msg">Fetching assigned deliveries...</p>
+    <div id="deliveryList" class="delivery-list"></div>
+    <button class="btn mt-20" onclick="logout()">🚪 Logout</button>
+  </main>
+
+  <footer>
+    © 2025 Suriyawan Saffari | Delivery System Powered by GPS + AI Assistant
+  </footer>
+
+  <script>
+    const BASE_URL = "https://suriyawan-saffari-backend.onrender.com";
+    const token = localStorage.getItem("deliveryToken");
+
+    // Redirect if not logged in
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const welcome = document.getElementById("welcome-msg");
+      const statusMsg = document.getElementById("status-msg");
+      const deliveryList = document.getElementById("deliveryList");
+
+      welcome.innerText = "✅ Logged In – Welcome Delivery Boy!";
+
+      fetch(`${BASE_URL}/api/delivery/assignments`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        const deliveries = data.assignments || [];
+        statusMsg.innerText = `📦 You have ${deliveries.length} delivery${deliveries.length !== 1 ? 'ies' : 'y'}.`;
+
+        if (deliveries.length === 0) {
+          deliveryList.innerHTML = "<p class='info'>No assignments yet.</p>";
+        }
+
+        deliveries.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "delivery-card card mt-10";
+          div.innerHTML = `
+            <strong>Order ID:</strong> ${item.orderId}<br/>
+            <strong>Customer:</strong> ${item.customerName}<br/>
+            <strong>Address:</strong> ${item.address}<br/>
+            <strong>Status:</strong> ${item.status}<br/><br/>
+            <button class="btn" onclick="markDelivered('${item.orderId}')">✅ Mark as Delivered</button>
+          `;
+          deliveryList.appendChild(div);
+        });
+      })
+      .catch(err => {
+        statusMsg.innerText = "❌ Could not fetch deliveries.";
+        console.error(err);
+      });
+    });
+
+    function markDelivered(orderId) {
+      fetch(`${BASE_URL}/api/delivery/update-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ orderId, status: "Delivered" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ Marked as Delivered");
+        location.reload();
+      })
+      .catch(err => {
+        alert("❌ Failed to update status");
+        console.error(err);
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("deliveryToken");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

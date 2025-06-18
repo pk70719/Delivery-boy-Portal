@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Delivery Boy Portal – Suriyawan Saffari</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #eafaf1;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #00b894;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .dashboard {
+      margin-top: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      width: 95%;
+      max-width: 750px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .status {
+      color: green;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #00cec9;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px 5px 0 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #00b894;
+    }
+
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      box-shadow: 0 0 5px rgba(0,0,0,0.08);
+    }
+
+    input[type="file"] {
+      margin-top: 8px;
+    }
+
+    #chatbox {
+      margin-top: 30px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    #chatbox input {
+      width: 75%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #chatbox button {
+      padding: 10px 15px;
+      margin-left: 8px;
+      background-color: #0984e3;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    footer {
+      margin: 40px 0 20px;
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+    }
+
+    @media screen and (max-width: 600px) {
+      #chatbox input, #chatbox button {
+        width: 100%;
+        margin: 5px 0;
+      }
+      #chatbox {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    🚚 Suriyawan Saffari – Delivery Boy Portal
+  </header>
+
+  <div class="dashboard">
+    <h2 id="welcome-msg">Connecting to Backend...</h2>
+    <p class="status" id="status-msg">Awaiting API Response...</p>
+
+    <div>
+      <button class="btn" onclick="startShift()">🚦 Start Shift</button>
+      <button class="btn" onclick="endShift()">🏁 End Shift</button>
+      <button class="btn" onclick="loadSalary()">💼 Check Salary</button>
+      <button class="btn" onclick="checkReferralBonus()">🎁 Check Referral Bonus</button>
+    </div>
+
+    <div id="salary-box" class="status">💼 Salary: Loading...</div>
+    <div id="bonus-box" class="status">🎁 Referral Bonus: Loading...</div>
+
+    <h3>📦 Assigned Deliveries:</h3>
+    <div id="delivery-list">
+      <!-- JS will insert delivery cards here -->
+    </div>
+  </div>
+
+  <div class="dashboard" id="chatbox">
+    <h3>🤖 Chat with AI Assistant</h3>
+    <input type="text" id="userInput" placeholder="Ask something like 'How many orders today?'" />
+    <button onclick="sendMessage()">Send</button>
+    <div id="chatResponse" class="status"></div>
+  </div>
+
+  <footer>
+    © 2025 Suriyawan Saffari | AI + GPS + Salary + Referral System Enabled
+  </footer>
+
+  <script defer>
+    // Safe load message on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('welcome-msg').innerText = "🟢 Connected to Delivery System!";
+      document.getElementById('status-msg').innerText = "✅ Ready for Actions";
+    });
+
+    function startShift() {
+      // Implement with backend connection
+      document.getElementById('status-msg').innerText = "🕒 Shift Started!";
+    }
+
+    function endShift() {
+      document.getElementById('status-msg').innerText = "🛑 Shift Ended.";
+    }
+
+    function loadSalary() {
+      document.getElementById('salary-box').innerText = "💼 Salary: ₹20/order × 5 = ₹100 (example)";
+    }
+
+    function checkReferralBonus() {
+      document.getElementById('bonus-box').innerText = "🎁 Bonus: ₹10 from 2 referrals = ₹20";
+    }
+
+    function sendMessage() {
+      const userInput = document.getElementById("userInput").value.trim();
+      const responseBox = document.getElementById("chatResponse");
+      if (userInput.length === 0) {
+        responseBox.innerText = "⚠️ Please enter a question.";
+        return;
+      }
+      responseBox.innerText = "🤖 Thinking...";
+      setTimeout(() => {
+        responseBox.innerText = "📦 You asked: " + userInput + "\n✅ (Smart response from AI system coming soon...)";
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>
