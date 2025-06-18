@@ -1,7 +1,7 @@
 // Delivery Boy Portal Script (D1–D25)
 
 // 👇 Backend base URL
-const BASE_URL = "https://suriyawan-saffari-backend.onrender.com";
+const BASE_URL = "https://suriyawan-backend-68z3.onrender.com";
 
 // D1: DOM Load
 document.addEventListener("DOMContentLoaded", () => {
