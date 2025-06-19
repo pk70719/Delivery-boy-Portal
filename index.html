@@ -1,3 +1,4 @@
+<!-- ✅ Real Working Delivery Boy Portal (index.html) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,7 +48,6 @@
     }
 
     .btn {
-      display: inline-block;
       background-color: #00cec9;
       color: white;
       padding: 10px 20px;
@@ -69,10 +69,6 @@
       border-radius: 10px;
       margin: 15px 0;
       box-shadow: 0 0 5px rgba(0,0,0,0.08);
-    }
-
-    input[type="file"] {
-      margin-top: 8px;
     }
 
     #chatbox {
@@ -112,10 +108,6 @@
         width: 100%;
         margin: 5px 0;
       }
-      #chatbox {
-        flex-direction: column;
-        align-items: stretch;
-      }
     }
   </style>
 </head>
@@ -140,9 +132,7 @@
     <div id="bonus-box" class="status">🎁 Referral Bonus: Loading...</div>
 
     <h3>📦 Assigned Deliveries:</h3>
-    <div id="delivery-list">
-      <!-- JS will insert delivery cards here -->
-    </div>
+    <div id="delivery-list"></div>
   </div>
 
   <div class="dashboard" id="chatbox">
@@ -156,40 +146,117 @@
     © 2025 Suriyawan Saffari | AI + GPS + Salary + Referral System Enabled
   </footer>
 
-  <script defer>
-    // Safe load message on DOM load
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('welcome-msg').innerText = "🟢 Connected to Delivery System!";
-      document.getElementById('status-msg').innerText = "✅ Ready for Actions";
+  <script>
+    const BASE_URL = "https://suriyawan-backend-68z3.onrender.com";
+    const token = localStorage.getItem("deliveryToken");
+
+    // 🚫 Redirect if not logged in
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("welcome-msg").innerText = "🟢 Connected to Delivery System";
+      document.getElementById("status-msg").innerText = "✅ Ready for Actions";
+
+      // 🔄 Fetch deliveries
+      fetch(`${BASE_URL}/api/delivery/assignments`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        const deliveries = data.assignments || [];
+        const list = document.getElementById("delivery-list");
+
+        if (!deliveries.length) {
+          list.innerHTML = "<p>No deliveries assigned.</p>";
+          return;
+        }
+
+        deliveries.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "card";
+          div.innerHTML = `
+            <strong>Order ID:</strong> ${item.orderId}<br>
+            <strong>Name:</strong> ${item.customerName}<br>
+            <strong>Address:</strong> ${item.address}<br>
+            <strong>Status:</strong> ${item.status}<br>
+            <button class="btn" onclick="markDelivered('${item.orderId}')">✅ Mark Delivered</button>
+          `;
+          list.appendChild(div);
+        });
+      })
+      .catch(err => {
+        document.getElementById("status-msg").innerText = "❌ Failed to load deliveries";
+        console.error(err);
+      });
     });
 
+    function markDelivered(orderId) {
+      if (!confirm("Mark this delivery as completed?")) return;
+
+      fetch(`${BASE_URL}/api/delivery/update-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ orderId, status: "Delivered" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("✅ Marked as Delivered");
+        location.reload();
+      })
+      .catch(() => alert("❌ Failed to update status"));
+    }
+
     function startShift() {
-      // Implement with backend connection
-      document.getElementById('status-msg').innerText = "🕒 Shift Started!";
+      document.getElementById("status-msg").innerText = "🕒 Shift Started!";
     }
 
     function endShift() {
-      document.getElementById('status-msg').innerText = "🛑 Shift Ended.";
+      document.getElementById("status-msg").innerText = "🛑 Shift Ended.";
     }
 
     function loadSalary() {
-      document.getElementById('salary-box').innerText = "💼 Salary: ₹20/order × 5 = ₹100 (example)";
+      fetch(`${BASE_URL}/api/delivery/salary`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("salary-box").innerText = "💼 Salary: ₹" + (data.salary || "0");
+      })
+      .catch(() => {
+        document.getElementById("salary-box").innerText = "❌ Error fetching salary";
+      });
     }
 
     function checkReferralBonus() {
-      document.getElementById('bonus-box').innerText = "🎁 Bonus: ₹10 from 2 referrals = ₹20";
+      fetch(`${BASE_URL}/api/delivery/referral-bonus`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("bonus-box").innerText = "🎁 Bonus: ₹" + (data.bonus || "0");
+      })
+      .catch(() => {
+        document.getElementById("bonus-box").innerText = "❌ Error fetching bonus";
+      });
     }
 
     function sendMessage() {
-      const userInput = document.getElementById("userInput").value.trim();
-      const responseBox = document.getElementById("chatResponse");
-      if (userInput.length === 0) {
-        responseBox.innerText = "⚠️ Please enter a question.";
+      const input = document.getElementById("userInput").value.trim();
+      const response = document.getElementById("chatResponse");
+      if (!input) {
+        response.innerText = "⚠️ Please enter something.";
         return;
       }
-      responseBox.innerText = "🤖 Thinking...";
+
+      response.innerText = "🤖 Thinking...";
+
       setTimeout(() => {
-        responseBox.innerText = "📦 You asked: " + userInput + "\n✅ (Smart response from AI system coming soon...)";
+        response.innerText = `📦 You asked: "${input}"\nAI Response: (Coming soon...)`;
       }, 1000);
     }
   </script>
