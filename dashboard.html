@@ -1,4 +1,4 @@
-<!-- Delivery Boy Dashboard -->
+<!-- ✅ Delivery Boy Dashboard – Real Working -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,70 +9,75 @@
 </head>
 <body>
   <header>
-    📦 Suriyawan Saffari – Delivery Dashboard
+    📦 <strong>Suriyawan Saffari</strong> – Delivery Dashboard
   </header>
 
   <main class="dashboard container">
-    <h2 id="welcome-msg">Checking Login...</h2>
-    <p class="status" id="status-msg">Fetching assigned deliveries...</p>
+    <h2 id="welcome-msg">🔄 Checking Login...</h2>
+    <p class="status" id="status-msg">📡 Fetching assigned deliveries...</p>
     <div id="deliveryList" class="delivery-list"></div>
     <button class="btn mt-20" onclick="logout()">🚪 Logout</button>
   </main>
 
   <footer>
-    © 2025 Suriyawan Saffari | Delivery System Powered by GPS + AI Assistant
+    © 2025 Suriyawan Saffari | Powered by GPS + AI Assistant (Benco)
   </footer>
 
   <script>
     const BASE_URL = "https://suriyawan-backend-68z3.onrender.com";
     const token = localStorage.getItem("deliveryToken");
 
-    // Redirect if not logged in
+    // 🔐 Redirect if token is missing
     if (!token) {
       window.location.href = "login.html";
     }
 
+    // 🚚 Fetch deliveries on load
     document.addEventListener("DOMContentLoaded", () => {
       const welcome = document.getElementById("welcome-msg");
       const statusMsg = document.getElementById("status-msg");
       const deliveryList = document.getElementById("deliveryList");
 
-      welcome.innerText = "✅ Logged In – Welcome Delivery Boy!";
+      welcome.innerText = "✅ Logged In – Welcome Delivery Partner";
 
       fetch(`${BASE_URL}/api/delivery/assignments`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => res.json())
       .then(data => {
         const deliveries = data.assignments || [];
-        statusMsg.innerText = `📦 You have ${deliveries.length} delivery${deliveries.length !== 1 ? 'ies' : 'y'}.`;
+
+        statusMsg.innerText = `📦 You have ${deliveries.length} delivery${deliveries.length !== 1 ? 'ies' : ''}.`;
 
         if (deliveries.length === 0) {
-          deliveryList.innerHTML = "<p class='info'>No assignments yet.</p>";
+          deliveryList.innerHTML = "<p class='info'>🚫 No assigned deliveries.</p>";
+          return;
         }
 
+        // 🧾 Display each delivery
         deliveries.forEach(item => {
           const div = document.createElement("div");
           div.className = "delivery-card card mt-10";
           div.innerHTML = `
-            <strong>Order ID:</strong> ${item.orderId}<br/>
-            <strong>Customer:</strong> ${item.customerName}<br/>
-            <strong>Address:</strong> ${item.address}<br/>
-            <strong>Status:</strong> ${item.status}<br/><br/>
+            <strong>📄 Order ID:</strong> ${item.orderId}<br/>
+            <strong>👤 Customer:</strong> ${item.customerName}<br/>
+            <strong>📍 Address:</strong> ${item.address}<br/>
+            <strong>📦 Status:</strong> <span style="color: ${item.status === 'Delivered' ? 'green' : 'orange'}">${item.status}</span><br/><br/>
             <button class="btn" onclick="markDelivered('${item.orderId}')">✅ Mark as Delivered</button>
           `;
           deliveryList.appendChild(div);
         });
       })
       .catch(err => {
-        statusMsg.innerText = "❌ Could not fetch deliveries.";
+        statusMsg.innerText = "❌ Could not fetch delivery assignments.";
         console.error(err);
       });
     });
 
+    // ✅ Update Delivery Status
     function markDelivered(orderId) {
+      if (!confirm(`Confirm delivery of Order ID: ${orderId}?`)) return;
+
       fetch(`${BASE_URL}/api/delivery/update-status`, {
         method: "POST",
         headers: {
@@ -83,18 +88,23 @@
       })
       .then(res => res.json())
       .then(data => {
-        alert("✅ Marked as Delivered");
-        location.reload();
+        if (data.success) {
+          alert("✅ Order marked as Delivered");
+          location.reload();
+        } else {
+          alert("❌ Failed: " + data.message);
+        }
       })
       .catch(err => {
-        alert("❌ Failed to update status");
+        alert("❌ Error updating status");
         console.error(err);
       });
     }
 
+    // 🔓 Logout Function
     function logout() {
       localStorage.removeItem("deliveryToken");
-      window.location.href = "login.html";
+      location.href = "login.html";
     }
   </script>
 </body>
