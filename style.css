@@ -1,4 +1,4 @@
-/* Delivery Boy Portal – Suriyawan Saffari */
+/* ✅ Delivery Boy Portal – Suriyawan Saffari */
 
 body {
   font-family: 'Segoe UI', sans-serif;
@@ -21,6 +21,7 @@ header {
   font-weight: bold;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard {
@@ -31,6 +32,13 @@ header {
   box-shadow: 0 0 10px rgba(0,0,0,0.05);
   width: 95%;
   max-width: 750px;
+  box-sizing: border-box;
+}
+
+h2, h3 {
+  margin-top: 0;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
 .status {
@@ -49,7 +57,7 @@ header {
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s ease;
 }
 
 .btn:hover {
@@ -63,24 +71,50 @@ header {
   margin: 15px 0;
   box-shadow: 0 0 5px rgba(0,0,0,0.08);
   border-left: 4px solid #00cec9;
+  transition: transform 0.2s ease;
 }
 
-.card h4 {
-  margin-top: 0;
-  margin-bottom: 8px;
-  color: #2d3436;
+.card:hover {
+  transform: scale(1.01);
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  color: #0984e3;
 }
 
 .card p {
-  margin: 4px 0;
+  margin: 6px 0;
+  font-size: 14px;
+  color: #2f3640;
+}
+
+.card button {
+  margin-right: 8px;
+  margin-top: 10px;
+  background-color: #81ecec;
+  color: #2d3436;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.card button:hover {
+  background-color: #00cec9;
+  color: white;
 }
 
 input[type="file"] {
-  margin-top: 8px;
+  margin-top: 10px;
   border: 1px solid #ccc;
-  padding: 5px;
+  padding: 6px;
   border-radius: 6px;
   background: #f7f7f7;
+  width: 100%;
+  max-width: 300px;
+  display: block;
 }
 
 footer {
@@ -101,6 +135,7 @@ footer {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  box-sizing: border-box;
 }
 
 #chatbox input {
@@ -109,6 +144,7 @@ footer {
   border: 1px solid #ccc;
   border-radius: 6px;
   min-width: 0;
+  font-size: 14px;
 }
 
 #chatbox button {
@@ -118,6 +154,7 @@ footer {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 #chatResponse {
@@ -125,9 +162,13 @@ footer {
   font-size: 14px;
   color: #333;
   width: 100%;
+  white-space: pre-line;
 }
 
-.salary-info, .bonus-info {
+.salary-info,
+.bonus-info,
+#salary-box,
+#bonus-box {
   font-size: 15px;
   color: #444;
   margin: 8px 0;
@@ -138,7 +179,10 @@ footer {
 }
 
 @media screen and (max-width: 600px) {
-  .btn {
+  .btn,
+  .card button,
+  #chatbox input,
+  #chatbox button {
     width: 100%;
     margin: 5px 0;
   }
@@ -147,8 +191,7 @@ footer {
     flex-direction: column;
   }
 
-  #chatbox input, #chatbox button {
-    width: 100%;
-    margin: 5px 0;
+  input[type="file"] {
+    max-width: 100%;
   }
 }
