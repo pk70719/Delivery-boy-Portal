@@ -1,4 +1,4 @@
-<!-- Delivery Boy Login Page -->
+<!-- ✅ Real Working Delivery Boy Login (login.html) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +6,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Delivery Boy Login – Suriyawan Saffari</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #00b894;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #00cec9;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #00b894;
+    }
+
+    .status {
+      margin-top: 15px;
+      color: #c0392b;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    footer {
+      margin: 50px 0 20px;
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
+
   <header>
     🚚 Suriyawan Saffari – Delivery Login
   </header>
@@ -36,7 +108,6 @@
       const password = document.getElementById("password").value.trim();
       const loginStatus = document.getElementById("loginStatus");
 
-      // Clear previous message
       loginStatus.innerText = "";
 
       if (!phone || !password) {
