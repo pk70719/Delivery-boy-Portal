@@ -1,15 +1,12 @@
-// Delivery Boy Portal Script (D1–D25)
+// ✅ Delivery Boy Portal Script – Suriyawan Saffari
 
-// 👇 Backend base URL
 const BASE_URL = "https://suriyawan-backend-68z3.onrender.com";
+const token = localStorage.getItem("deliveryToken");
 
 // D1: DOM Load
 document.addEventListener("DOMContentLoaded", () => {
-  const welcome = document.getElementById("welcome-msg");
-  if (welcome) {
-    welcome.innerText = "🚚 Delivery Boy Dashboard Connected to Backend!";
-  }
-
+  document.getElementById("welcome-msg").innerText = "🚚 Delivery Portal Connected!";
+  document.getElementById("status-msg").innerText = "✅ Ready to operate.";
   loadAssignedDeliveries();
   loadSalary();
   checkReferralBonus();
@@ -17,20 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // D2: Load Assigned Deliveries
 function loadAssignedDeliveries() {
-  const token = localStorage.getItem("deliveryToken");
-  if (!token) return;
+  if (!token) return (window.location.href = "login.html");
 
   fetch(`${BASE_URL}/api/delivery/assignments`, {
     headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => res.json())
-    .then(data => {
-      console.log("📦 Assigned Deliveries:", data);
-      renderDeliveries(data);
-    })
-    .catch(err => {
-      console.error("❌ Error fetching deliveries:", err);
-    });
+    .then(data => renderDeliveries(data.assignments || []))
+    .catch(err => console.error("❌ Delivery Load Failed:", err));
 }
 
 // D3: Render Delivery Cards
@@ -39,6 +30,11 @@ function renderDeliveries(deliveries) {
   if (!container) return;
 
   container.innerHTML = "";
+  if (deliveries.length === 0) {
+    container.innerHTML = "<p>📭 No deliveries assigned currently.</p>";
+    return;
+  }
+
   deliveries.forEach(order => {
     const div = document.createElement("div");
     div.className = "card";
@@ -61,129 +57,140 @@ function renderDeliveries(deliveries) {
 // D4: Mark Order Picked Up
 function markPickedUp(id) {
   fetch(`${BASE_URL}/api/delivery/pickup/${id}`, {
-    method: "POST"
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => res.json())
     .then(() => {
-      alert("✅ Pickup marked");
+      alert("✅ Pickup marked.");
       loadAssignedDeliveries();
     });
 }
 
-// D5: Mark Order Delivered
+// D5: Mark Delivered
 function markDelivered(id) {
   fetch(`${BASE_URL}/api/delivery/delivered/${id}`, {
-    method: "POST"
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }
   })
     .then(res => res.json())
     .then(() => {
-      alert("📬 Delivery marked");
+      alert("📬 Delivery completed.");
       loadAssignedDeliveries();
     });
 }
 
-// D6: Upload Proof Image
+// D6: Upload Delivery Proof
 function uploadProof(event, id) {
   const file = event.target.files[0];
   if (!file) return;
-  
   const formData = new FormData();
   formData.append("image", file);
 
   fetch(`${BASE_URL}/api/delivery/proof/${id}`, {
     method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
     body: formData
   })
     .then(res => res.json())
-    .then(() => {
-      alert("📸 Proof uploaded");
-    });
+    .then(() => alert("📸 Proof uploaded."));
 }
 
-// D7: Navigate via Google Maps
+// D7: Google Maps Navigation
 function navigateTo(lat, lng) {
   window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, "_blank");
 }
 
-// D8: Cash Collection
+// D8: Collect COD Cash
 function collectCash(id, amount) {
   fetch(`${BASE_URL}/api/delivery/collect/${id}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ amount })
   })
     .then(res => res.json())
-    .then(() => {
-      alert("💰 Cash collection recorded");
-    });
+    .then(() => alert("💰 Cash collection updated."));
 }
 
-// D9: Chat with AI Assistant
+// D9: Chat AI
 function sendMessage() {
   const input = document.getElementById("userInput");
   const message = input?.value.trim();
-  if (!message) return;
+  const responseBox = document.getElementById("chatResponse");
+  if (!message) return (responseBox.innerText = "❗ Type something.");
 
   fetch(`${BASE_URL}/api/ai/delivery-chat`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ message })
   })
     .then(res => res.json())
     .then(data => {
-      const responseBox = document.getElementById("chatResponse");
-      if (responseBox) responseBox.innerText = "🤖 " + data.reply;
+      responseBox.innerText = "🤖 " + (data.reply || "No reply.");
+      input.value = "";
     });
-
-  input.value = "";
 }
 
-// D10: Load Salary Info
+// D10: Salary Info
 function loadSalary() {
-  fetch(`${BASE_URL}/api/delivery/salary`)
+  fetch(`${BASE_URL}/api/delivery/salary`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
     .then(res => res.json())
     .then(data => {
       const salaryBox = document.getElementById("salary-box");
-      if (salaryBox) salaryBox.innerText = `💼 Total Salary: ₹${data.total}`;
+      if (salaryBox) salaryBox.innerText = `💼 Salary: ₹${data.total || 0}`;
     });
 }
 
-// D11: Daily Shift Start
+// D11: Start Shift
 function startShift() {
-  fetch(`${BASE_URL}/api/delivery/start-shift`, { method: "POST" })
+  fetch(`${BASE_URL}/api/delivery/start-shift`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }
+  })
     .then(res => res.json())
-    .then(() => {
-      alert("🚦 Shift started");
-    });
+    .then(() => alert("🚦 Shift Started."));
 }
 
-// D12: Daily Shift End
+// D12: End Shift
 function endShift() {
-  fetch(`${BASE_URL}/api/delivery/end-shift`, { method: "POST" })
+  fetch(`${BASE_URL}/api/delivery/end-shift`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }
+  })
     .then(res => res.json())
-    .then(() => {
-      alert("🏁 Shift ended");
-    });
+    .then(() => alert("🏁 Shift Ended."));
 }
 
-// D13: Live Notification (every 10 sec)
+// D13: Auto Notification Polling
 setInterval(() => {
-  fetch(`${BASE_URL}/api/delivery/notifications`)
+  fetch(`${BASE_URL}/api/delivery/notifications`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
     .then(res => res.json())
     .then(data => {
       if (data.newAssignment) {
-        alert("🆕 New order assigned!");
+        alert("🆕 New Delivery Assigned!");
         loadAssignedDeliveries();
       }
     });
 }, 10000);
 
-// D14: Referral Delivery Bonus
+// D14: Referral Bonus Check
 function checkReferralBonus() {
-  fetch(`${BASE_URL}/api/delivery/referral-bonus`)
+  fetch(`${BASE_URL}/api/delivery/referral-bonus`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
     .then(res => res.json())
     .then(data => {
       const bonusBox = document.getElementById("bonus-box");
-      if (bonusBox) bonusBox.innerText = `🎁 Bonus: ₹${data.bonus}`;
+      if (bonusBox) bonusBox.innerText = `🎁 Bonus: ₹${data.bonus || 0}`;
     });
 }
